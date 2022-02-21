@@ -1,0 +1,94 @@
+const express = require('express');
+const helmet = require('helmet');
+
+const { getAllBalanceDates, getBalance } = require('../services/balance.js');
+const { updateBalance } = require('../services/balancer.js');
+const { addExpense } = require('../services/expenser.js');
+const { getBudget } = require('../services/budget.js');
+const { getExpenses, getFixedExpenses, getInvests } = require('../services/expense.js');
+const { parse } = require('../services/expense-parser.js');
+
+const router = express.Router();
+router.use(helmet.contentSecurityPolicy({
+  useDefaults: true,
+}));
+
+router.get('/updateExpenses', (req, res) => {
+  parse();
+  res.send({});
+});
+
+router.get('/getBudget', (req, res) => {
+  res.send(getBudget(req.query.date));
+});
+
+router.get('/calculations', (req, res) => {
+  const budget = getBudget(req.query.date);
+  const expenses = getExpenses(req.query.date);
+  const invests = getInvests(req.query.date);
+  const balance = getBalance(req.query.date);
+  const overInvestAmount = invests.total > budget.invest ? invests.total - budget.invest : 0;
+  const overSpendAmount = expenses.total > budget.spend ? expenses.total - budget.spend : 0;
+  const totalSpendAvailable = (balance.amount - overInvestAmount + budget.spend).toFixed(2);
+  const totalInvestAvailable = (balance.amount - overSpendAmount + budget.invest).toFixed(2);
+  const totalSpendLeft = (totalSpendAvailable - expenses.total).toFixed(2);
+  const totalInvestLeft = (totalInvestAvailable - invests.total).toFixed(2);
+  res.send({
+    // availableSpendBudget: Math.max(budget.spend - expenses.total, 0).toFixed(2),
+    // availableSpendSurplus: Math.max(balance.spend_surplus - (Math.max(expenses.total - budget.spend, 0)), 0).toFixed(2),
+    // availableInvestBudget: Math.max(budget.invest - invests.total, 0).toFixed(2),
+    // availableInvestSurplus: Math.max(balance.invest_surplus - (Math.max(invests.total - budget.invest, 0)), 0).toFixed(2),
+    overInvestAmount,
+    overSpendAmount,
+
+    // totalSpendAvailable: (budget.spend + balance.spend_surplus).toFixed(2),
+    totalSpendAvailable,
+    totalSpendLeft,
+    // totalInvestAvailable: (budget.invest + balance.invest_surplus).toFixed(2),
+    totalInvestAvailable,
+    totalInvestLeft,
+    // amount: balance.amount,
+  });
+});
+
+router.get('/getExpenses', (req, res) => {
+  const expenses = getExpenses(req.query.date);
+  res.send(expenses);
+});
+router.get('/getFixedExpenses', (req, res) => {
+  res.send(getFixedExpenses(req.query.date));
+});
+router.get('/getInvests', (req, res) => {
+  const invests = getInvests(req.query.date);
+  res.send(invests);
+});
+
+router.get('/getBalance', (req, res) => {
+  const balance = getBalance(req.query.date);
+  res.send(balance);
+});
+
+router.get('/getDates', (req, res) => {
+  res.send(getAllBalanceDates());
+});
+
+router.post('/addExpense', (req, res) => {
+  const { amount, date, description, type } = req.body;
+  addExpense({
+    amount,
+    date,
+    description,
+    type,
+  });
+  res.send({});
+});
+
+/**
+ * Trigger balance update manually via API
+ */
+router.get('/updateBalance', (req, res) => {
+  updateBalance(req.query.date);
+  res.sendStatus(200);
+});
+
+module.exports = router;

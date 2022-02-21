@@ -1,0 +1,17 @@
+{
+  "citi": {
+    "description": "Description",
+    "amount": ["Debit", "Credit"],
+    "date": "Date"
+  },
+  "amex": {
+    "description": "Description",
+    "date": "Date",
+    "amount": "Amount"
+  },
+  "manual": {
+    "description": 0,
+    "amount": 2,
+    "date": 4
+  }
+}

@@ -1,0 +1,176 @@
+<template>
+  <main v-if="!loading">
+    <section class="bg-orange-100 px-4">
+      <Overview :date="date" @done="fetchData(this.date)"/>
+    </section>
+    <section class="mt-4">
+      <div class="px-4">
+        <div class="flex">
+          <h2 class="text-3xl flex-auto">Budget</h2>
+          <div class="flex flex-col items-center">
+            <div>
+              <select v-model="date" class="p-2 rounded border" @change="fetchData(date)">
+                <option v-for="({ date }, i) in dates" :key="i" :value="date">
+                  {{ toDisplayDate(date) }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="grid gap-8">
+          <div class="grid gap-2 mt-2">
+            <LabeledData :data="budget.total" label="Total Spending Available"/>
+            <div class="flex gap-4">
+              <LabeledData :data="budget.spend" label="Free Spend"/>
+              <LabeledData :data="budget.invest" label="Invest"/>
+              <LabeledData :data="budget.fixed" label="Fixed"/>
+            </div>
+          </div>
+          <div class="grid gap-2 mt-2">
+            <h3 class="text-2xl">Free Spending Tracker</h3>
+            <LabeledData
+              :data="calculations.totalSpendAvailable"
+              label="Available"
+              :misc="`budget ($${budget.spend}) + balance ($${balance.amount}) - over-investment ($${calculations.overInvestAmount})`"
+            />
+            <LabeledData :data="calculations.totalSpendLeft" label="Remaining"/>
+          </div>
+          <div class="grid gap-2 mt-2">
+            <h3 class="text-2xl">Investing Tracker</h3>
+            <LabeledData
+              :data="calculations.totalInvestAvailable"
+              label="Available"
+              :misc="`budget ($${budget.invest}) + balance ($${balance.amount}) - over-spend ($${calculations.overSpendAmount})`"
+            />
+            <LabeledData :data="calculations.totalInvestLeft" label="Remaining"/>
+          </div>
+          <div class="grid gap-2 mt-2">
+            <h3 class="text-2xl">Fixed Expenses</h3>
+            <LabeledData :data="budget.fixed" label="Amount"/>
+            <table v-if="budget.fixed > 0">
+              <thead class="bg-orange-200 text-left">
+                <th class="text-left">Description</th>
+                <th class="text-left">Amount</th>
+              </thead>
+              <tbody class="bg-orange-50">
+                <tr v-for="(expense, i) in fixedExpenses" :key="i">
+                  <td class="text-left pr-4">{{ expense.description }}</td>
+                  <td class="text-left">${{ expense.amount }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="mt-8">
+      <div class="px-4">
+        <h2 class="text-3xl">Expenses</h2>
+        <LabeledData class="mt-2" :data="expenses.total" label="Total"/>
+        <div class="mt-2 overflow-scroll">
+          <table v-if="expenses.total > 0">
+            <thead class="bg-orange-200 text-left">
+              <th>Date</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </thead>
+            <tbody class="bg-orange-50">
+              <tr v-for="(expense, i) in expenses.expenses" :key="i">
+                <td class="pr-4 whitespace-nowrap">{{ expense.date }}</td>
+                <td class="pr-4">{{ expense.type }}</td>
+                <td class="pr-4">{{ expense.description }}</td>
+                <td>{{ expense.amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </section>
+      <section class="mt-8">
+        <div class="px-4">
+          <h2 class="text-3xl">Investments</h2>
+          <LabeledData class="mt-2" :data="invests.total" label="Total"/>
+          <table v-if="invests.total > 0">
+            <thead class="bg-orange-200 text-left">
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </thead>
+            <tbody class="bg-orange-50">
+              <tr v-for="(invest, i) in invests.invests" :key="i">
+                <td class="pr-2">{{ invest.date }}</td>
+                <td class="pr-2">{{ invest.description }}</td>
+                <td>{{ invest.amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </section>
+    <section class="mt-8">
+      <div class="px-4">
+        <AddExpense @done="fetchData(this.date)"/>
+      </div>
+    </section>
+  </main>
+</template>
+
+<script>
+  import moment from 'moment';
+  import AddExpense from '../AddExpense.vue';
+  import LabeledData from '../LabeledData.vue';
+  import Overview from '../Overview.vue';
+  import { get, post } from '../../fetch';
+
+  export default {
+    name: 'Main',
+    components: {
+      AddExpense,
+      LabeledData,
+      Overview,
+    },
+    data() {
+      return {
+        balance: null,
+        budget: null,
+        calculations: null,
+        currentBalance: null,
+        date: moment().startOf('month').format('yyyy-MM-DD'),
+        dates: [],
+        expenses: null,
+        fixedExpenses: null,
+        invests: null,
+        loading: true,
+        loadingSubmitNewExpense: false,
+      }
+    },
+    async created() {
+      await this.fetchData(this.date);
+      this.currentBalance = await get(`/getBalance?date=${this.date}`);
+      this.dates = await get('/getDates');
+    },
+    methods: {
+      async fetchData(date) {
+        this.loading = true;
+        this.balance = await get(`/getBalance?date=${date}`);
+        this.budget = await get(`/getBudget?date=${date}`);
+        this.calculations = await get(`/calculations?date=${date}`);
+        this.expenses = await get(`/getExpenses?date=${date}`);
+        this.fixedExpenses = await get(`/getFixedExpenses?date=${date}`);
+        this.invests = await get(`/getInvests?date=${date}`);
+        this.loading = false;
+      },
+      toDisplayDate(date) {
+        return moment(date).format('MMMM YYYY');
+      },
+    },
+  }
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+</style>
