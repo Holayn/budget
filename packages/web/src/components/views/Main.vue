@@ -1,7 +1,7 @@
 <template>
   <main v-if="!loading">
     <section class="bg-orange-100 px-4">
-      <Overview :date="date" @done="fetchData(this.date)"/>
+      <Overview @done="fetchData(this.date)"/>
     </section>
     <section class="mt-4">
       <div class="px-4">

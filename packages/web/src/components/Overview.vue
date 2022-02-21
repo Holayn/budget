@@ -46,7 +46,6 @@
     components: {
       LabeledData,
     },
-    props: ['date'],
     data() {
       return {
         currentBalance: {},
@@ -54,7 +53,7 @@
       }
     },
     async created() {
-      this.currentBalance = await get(`/getBalance?date=${this.date}`);
+      this.currentBalance = await get(`/getCurrentBalance`);
     },
     methods: {
       async updateExpenses() {

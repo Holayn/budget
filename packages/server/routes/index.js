@@ -34,20 +34,13 @@ router.get('/calculations', (req, res) => {
   const totalSpendLeft = (totalSpendAvailable - expenses.total).toFixed(2);
   const totalInvestLeft = (totalInvestAvailable - invests.total).toFixed(2);
   res.send({
-    // availableSpendBudget: Math.max(budget.spend - expenses.total, 0).toFixed(2),
-    // availableSpendSurplus: Math.max(balance.spend_surplus - (Math.max(expenses.total - budget.spend, 0)), 0).toFixed(2),
-    // availableInvestBudget: Math.max(budget.invest - invests.total, 0).toFixed(2),
-    // availableInvestSurplus: Math.max(balance.invest_surplus - (Math.max(invests.total - budget.invest, 0)), 0).toFixed(2),
     overInvestAmount,
     overSpendAmount,
 
-    // totalSpendAvailable: (budget.spend + balance.spend_surplus).toFixed(2),
     totalSpendAvailable,
     totalSpendLeft,
-    // totalInvestAvailable: (budget.invest + balance.invest_surplus).toFixed(2),
     totalInvestAvailable,
     totalInvestLeft,
-    // amount: balance.amount,
   });
 });
 
@@ -66,6 +59,17 @@ router.get('/getInvests', (req, res) => {
 router.get('/getBalance', (req, res) => {
   const balance = getBalance(req.query.date);
   res.send(balance);
+});
+router.get('/getCurrentBalance', (req, res) => {
+  const balance = getBalance();
+  const expenses = getExpenses();
+  const invests = getInvests();
+  const currentBalance = {
+    amount: balance.amount - expenses.total - invests.total,
+    spend_surplus: balance.spend_surplus - expenses.total,
+    invest_surplus: balance.invest_surplus - invests.total,
+  }
+  res.send(currentBalance);
 });
 
 router.get('/getDates', (req, res) => {
