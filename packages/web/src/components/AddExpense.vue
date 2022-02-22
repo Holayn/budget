@@ -38,22 +38,7 @@
 
 <script>
   import moment from 'moment';
-  import { post } from '../fetch';
-
-  const types = {
-    0: 'Groceries',
-    1: 'Household Goods',
-    2: 'Clothes',
-    3: 'Entertainment',
-    4: 'Material Items',
-    5: 'Dining',
-    6: 'Transportation',
-    7: 'Miscellaneous',
-    8: 'Medical/Healthcare',
-    9: 'Utilities',
-    10: 'Travel',
-    11: 'Invest',
-  }
+  import { get, post } from '../fetch';
 
   export default {
     name: 'AddExpense',
@@ -67,8 +52,11 @@
           description: null,
           type: null,
         },
-        types: Object.keys(types).map(t => types[t]),
+        types: [],
       }
+    },
+    async mounted() {
+      this.types = await get('/expenseTypes');
     },
     methods: {
       async submitNewExpense() {

@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 
+const { EXPENSE_TYPES } = require('../globals');
 const { getAllBalanceDates, getBalance } = require('../services/balance.js');
 const { updateBalance } = require('../services/balancer.js');
 const { addExpense } = require('../services/expenser.js');
@@ -74,6 +75,10 @@ router.get('/getCurrentBalance', (req, res) => {
 
 router.get('/getDates', (req, res) => {
   res.send(getAllBalanceDates());
+});
+
+router.get('/expenseTypes', (req, res) => {
+  res.send(EXPENSE_TYPES);
 });
 
 router.post('/addExpense', (req, res) => {

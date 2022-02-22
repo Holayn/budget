@@ -32,7 +32,7 @@ available types:
 'Invest',
 
 ### TODO
-- investing goal status should take into account this month's investing as well
+- remove server prompt, instead build into ui
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements
@@ -44,6 +44,7 @@ available types:
 - display fixed expenses
 - make ui pretty and refactor ui
 - month dropdown for date selection
+- investing goal status should take into account this month's investing as well
 
 
 #### SAMPLE

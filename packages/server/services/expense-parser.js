@@ -10,21 +10,6 @@ const { addExpense } = require('./expenser.js');
 const MAPPINGS = '../configs/mappings.json';
 const CSV_DIRECTORY = '../csv';
 
-const TYPES = {
-  0: 'Groceries',
-  1: 'Household Goods',
-  2: 'Clothes',
-  3: 'Entertainment',
-  4: 'Material Items',
-  5: 'Dining',
-  6: 'Transportation',
-  7: 'Miscellaneous',
-  8: 'Medical/Healthcare',
-  9: 'Utilities',
-  10: 'Travel',
-  11: 'Invest',
-}
-
 async function parse() {
   const filesToParse = findFiles();
   for (let i = 0; i < filesToParse.length; i++) {
@@ -101,13 +86,7 @@ function parseFile({ path: filePath, source }) {
           if (existingExpenseForDescription) {
             type = existingExpenseForDescription.type;
           } else {
-            console.log(`Type for: ${description} (${amount}) on ${date}.\nOPTIONS (type number):\n${Object.keys(TYPES).reduce((acc, val) => {
-              acc += `${val}: ${TYPES[val]}\n`;
-              return acc;
-            }, '')}`);
-            prompt.start();
-            const promptRes = await prompt.get(['type']);
-            type = TYPES[promptRes.type];
+            type = 'UNKNOWN';
           }
 
           addExpense({
