@@ -13,7 +13,14 @@
 <script>
   export default {
     name: 'LabeledData',
-    props: ['data', 'label', 'misc'],
+    props: {
+      data: {
+        type: [String, Number],
+        default: '--',
+      },
+      label: String,
+      misc: String,
+    }
   }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <main v-if="!loading">
+  <main>
     <section class="bg-orange-100 px-4">
       <Overview @done="fetchData(this.date)"/>
     </section>
@@ -131,22 +131,19 @@
     },
     data() {
       return {
-        balance: null,
-        budget: null,
-        calculations: null,
-        currentBalance: null,
+        balance: {},
+        budget: {},
+        calculations: {},
         date: moment().startOf('month').format('yyyy-MM-DD'),
         dates: [],
-        expenses: null,
-        fixedExpenses: null,
-        invests: null,
-        loading: true,
-        loadingSubmitNewExpense: false,
+        expenses: {},
+        fixedExpenses: {},
+        invests: {},
+        loading: false,
       }
     },
     async created() {
       await this.fetchData(this.date);
-      this.currentBalance = await get(`/getBalance?date=${this.date}`);
       this.dates = await get('/getDates');
     },
     methods: {
