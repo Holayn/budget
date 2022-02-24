@@ -42,7 +42,6 @@
 
   export default {
     name: 'AddExpense',
-    props: ['onDone'],
     data() {
       return {
         loadingSubmitNewExpense: false,

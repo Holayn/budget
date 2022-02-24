@@ -3,7 +3,7 @@ const moment = require('moment');
 const { DB_DATE_FORMAT } = require('../globals');
 const db = require('./db.js').getDb();
 
-function insertExpense({ type, amount, description, details, date }) {
+function insertExpense({ amount, date, description, details, type }) {
   const insert = db.transaction(expense => {
     const stmt = db.prepare('INSERT INTO expense (type, amount, description, details, date) VALUES (@type, @amount, @description, @details, @date)');
     stmt.run(expense);
@@ -18,6 +18,22 @@ function insertExpense({ type, amount, description, details, date }) {
   });
 }
 
+function updateExpense({ amount, date, description, details, id, type }) {
+  const update = db.transaction(expense => {
+    const stmt = db.prepare('UPDATE expense SET amount = @amount, date = @date, description = @description, details = @details, type = @type WHERE id = @id');
+    stmt.run(expense);
+  });
+
+  update({
+    amount,
+    date: moment(date).format(DB_DATE_FORMAT),
+    description,
+    details,
+    id,
+    type,
+  });
+}
+
 function findExpenseWithDescription(description) {
   const stmt = db.prepare('SELECT * FROM expense WHERE description = @description');
   return stmt.get({
@@ -25,7 +41,7 @@ function findExpenseWithDescription(description) {
   });
 }
 
-function findExistingExpenseEntry({ amount, description, date }) {
+function findExistingExpenseEntry({ amount, date, description }) {
   const stmt = db.prepare('SELECT * FROM expense WHERE date = @date AND amount = @amount AND description = @description');
   return stmt.get({
     amount,
@@ -80,4 +96,5 @@ module.exports = {
   getFixedExpenses,
   getInvests,
   insertExpense,
+  updateExpense,
 }

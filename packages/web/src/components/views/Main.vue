@@ -1,5 +1,6 @@
 <template>
   <main>
+    <UnknownExpenses v-if="flags.showUnknownExpenses" :expenses="unknownExpenses" @done="onUnknownExpensesDone"/>
     <section class="bg-orange-100 px-4">
       <Overview @done="fetchData(this.date)"/>
     </section>
@@ -67,7 +68,7 @@
       <div class="px-4">
         <h2 class="text-3xl">Expenses</h2>
         <LabeledData class="mt-2" :data="expenses.total" label="Total"/>
-        <div class="mt-2 overflow-scroll">
+        <div class="mt-2 overflow-auto">
           <table v-if="expenses.total > 0">
             <thead class="bg-orange-200 text-left">
               <th>Date</th>
@@ -120,7 +121,9 @@
   import AddExpense from '../AddExpense.vue';
   import LabeledData from '../LabeledData.vue';
   import Overview from '../Overview.vue';
+  import UnknownExpenses from '../UnknownExpenses.vue';
   import { get, post } from '../../fetch';
+  import { EXPENSE_UNKNOWN } from '../../globals';
 
   export default {
     name: 'Main',
@@ -128,34 +131,52 @@
       AddExpense,
       LabeledData,
       Overview,
+      UnknownExpenses,
     },
     data() {
       return {
         balance: {},
         budget: {},
         calculations: {},
-        date: moment().startOf('month').format('yyyy-MM-DD'),
+        date: moment('2022-01-01').startOf('month').format('yyyy-MM-DD'),
         dates: [],
         expenses: {},
         fixedExpenses: {},
+        flags: {
+          loading: false,
+          showUnknownExpenses: false,
+        },
         invests: {},
-        loading: false,
+      }
+    },
+    watch: {
+      unknownExpenses() {
+        this.flags.showUnknownExpenses = !!this.unknownExpenses.length;
       }
     },
     async created() {
       await this.fetchData(this.date);
       this.dates = await get('/getDates');
     },
+    computed: {
+      unknownExpenses() {
+        return this.expenses.expenses?.filter(e => e.type === EXPENSE_UNKNOWN) ?? [];
+      },
+    },
     methods: {
       async fetchData(date) {
-        this.loading = true;
+        this.flags.loading = true;
         this.balance = await get(`/getBalance?date=${date}`);
         this.budget = await get(`/getBudget?date=${date}`);
         this.calculations = await get(`/calculations?date=${date}`);
         this.expenses = await get(`/getExpenses?date=${date}`);
         this.fixedExpenses = await get(`/getFixedExpenses?date=${date}`);
         this.invests = await get(`/getInvests?date=${date}`);
-        this.loading = false;
+        this.flags.loading = false;
+      },
+      onUnknownExpensesDone() {
+        this.flags.showUnknownExpenses = false;
+        this.fetchData(this.date);
       },
       toDisplayDate(date) {
         return moment(date).format('MMMM YYYY');
