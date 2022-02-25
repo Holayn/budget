@@ -110,7 +110,7 @@
     </section>
     <section class="mt-8">
       <div class="px-4">
-        <AddExpense @done="fetchData(this.date)"/>
+        <AddExpense :date="date" @done="fetchData(this.date)"/>
       </div>
     </section>
   </main>
@@ -138,7 +138,7 @@
         balance: {},
         budget: {},
         calculations: {},
-        date: moment('2022-01-01').startOf('month').format('yyyy-MM-DD'),
+        date: moment().startOf('month').format('yyyy-MM-DD'),
         dates: [],
         expenses: {},
         fixedExpenses: {},
@@ -165,6 +165,7 @@
     },
     methods: {
       async fetchData(date) {
+        this.date = date;
         this.flags.loading = true;
         this.balance = await get(`/getBalance?date=${date}`);
         this.budget = await get(`/getBudget?date=${date}`);

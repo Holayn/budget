@@ -42,16 +42,25 @@
 
   export default {
     name: 'AddExpense',
+    props: ['date'],
     data() {
       return {
         loadingSubmitNewExpense: false,
         newExpense: {
           amount: null,
-          date: moment().format('yyyy-MM-DD'),
+          date: null,
           description: null,
           type: null,
         },
         types: [],
+      }
+    },
+    watch: {
+      date: {
+        handler() {
+          this.newExpense.date = moment(this.date).format('yyyy-MM-DD');
+        },
+        immediate: true,
       }
     },
     async mounted() {

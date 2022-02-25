@@ -13,7 +13,7 @@
           Behind by ${{ currentBalance.invest_surplus.toFixed(2) }}
         </div>
         <div v-else-if="currentBalance.invest_surplus < 0" class="text-green-500">
-          Ahead by ${{ currentBalance.invest_surplus.toFixed(2) }}
+          Ahead by ${{ currentBalance.invest_surplus.toFixed(2) * -1 }}
         </div>
         <div v-else class="text-green-500">
           Investment goal currently met!
@@ -28,7 +28,7 @@
           Underspent by ${{ currentBalance.spend_surplus.toFixed(2) }}
         </div>
         <div v-else-if="currentBalance.invest_surplus < 0" class="text-red-500">
-          Overspent by ${{ currentBalance.spend_surplus.toFixed(2) }}
+          Overspent by ${{ currentBalance.spend_surplus.toFixed(2) * -1 }}
         </div>
       </div>
     </div>
