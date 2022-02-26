@@ -31,6 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/', express.static(path.join(__dirname, '../web/dist')));
 app.use('/api', routes);
 app.use('/favicon.ico', express.static(path.join(__dirname, './static/favicon.ico')));
 
