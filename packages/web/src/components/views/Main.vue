@@ -39,6 +39,7 @@
               label="Available"
               :misc="`budget ($${budget.spend}) + balance ($${balance.amount}) - over-investment ($${calculations.overInvestAmount})`"
             />
+            <LabeledData :data="expenses.total" label="Spent" :misc="`${expenses.total < budget.spend ? `$${(budget.spend - expenses.total).toFixed(2)} left out of budget` : `$${(expenses.total - budget.spend).toFixed(2)} over budget`}`"/>
             <LabeledData :data="calculations.totalSpendLeft" label="Remaining"/>
           </div>
           <div class="grid gap-2 mt-2">
@@ -48,7 +49,7 @@
               label="Available"
               :misc="`budget ($${budget.invest}) + balance ($${balance.amount}) - over-spend ($${calculations.overSpendAmount})`"
             />
-            <LabeledData :data="invests.total" label="Spent" :misc="`${invests.total > budget.invest ? `$${budget.invest} investment goal met!` : `$${budget.invest - invests.total} still needed to invest`}`"/>
+            <LabeledData :data="invests.total" label="Spent" :misc="`${invests.total > budget.invest ? `$${budget.invest} investment goal met!` : `$${(budget.invest - invests.total).toFixed(2)} still needed to invest`}`"/>
             <LabeledData :data="calculations.totalInvestLeft" label="Remaining"/>
           </div>
           <div class="grid gap-2 mt-2">
