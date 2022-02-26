@@ -67,7 +67,10 @@
     </section>
     <section class="mt-8">
       <div class="px-4">
-        <h2 class="text-3xl">Expenses</h2>
+        <div class="flex items-center">
+          <h2 class="text-3xl">Expenses</h2>
+          <button class="flex items-center justify-center bg-orange-400 text-white h-6 w-6 ml-4 rounded" @click="flags.showAddExpense = true">+</button>
+        </div>
         <LabeledData class="mt-2" :data="expenses.total" label="Total"/>
         <div class="mt-2 overflow-auto">
           <table v-if="expenses.total > 0">
@@ -91,7 +94,10 @@
       </section>
       <section class="mt-8">
         <div class="px-4">
-          <h2 class="text-3xl">Investments</h2>
+          <div class="flex items-center">
+            <h2 class="text-3xl">Investments</h2>
+            <button class="flex items-center justify-center bg-orange-400 text-white h-6 w-6 ml-4 rounded" @click="flags.showAddExpense = true">+</button>
+          </div>
           <LabeledData class="mt-2" :data="invests.total" label="Total"/>
           <table v-if="invests.total > 0">
             <thead class="bg-orange-200 text-left">
@@ -109,11 +115,11 @@
           </table>
         </div>
     </section>
-    <section class="mt-8">
-      <div class="px-4">
-        <AddExpense :date="date" @done="fetchData(this.date)"/>
-      </div>
-    </section>
+
+
+
+
+    <AddExpense v-if="flags.showAddExpense" :date="date" @close="flags.showAddExpense = false" @done="fetchData(this.date)"/>
   </main>
 </template>
 
@@ -145,6 +151,7 @@
         fixedExpenses: {},
         flags: {
           loading: false,
+          showAddExpense: false,
           showUnknownExpenses: false,
         },
         invests: {},
