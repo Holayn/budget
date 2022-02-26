@@ -62,6 +62,9 @@
         this.$emit('done');
         this.isUpdatingExpenses = false;
       },
+      async refreshStatus() {
+        this.status = await get(`/status`);
+      },
     },
   }
 </script>

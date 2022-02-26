@@ -2,7 +2,7 @@
   <main>
     <UnknownExpenses v-if="flags.showUnknownExpenses" :expenses="unknownExpenses" @done="onUnknownExpensesDone"/>
     <section class="bg-orange-100 px-4">
-      <Overview @done="fetchData(this.date)"/>
+      <Overview ref="overview" @done="fetchData(this.date); $refs.overview.refreshStatus();"/>
     </section>
     <section class="mt-4">
       <div class="px-4">
