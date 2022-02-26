@@ -4,19 +4,24 @@
     <section class="bg-orange-100 px-4">
       <Overview ref="overview" @done="fetchData(this.date); $refs.overview.refreshStatus();"/>
     </section>
-    <section class="mt-4">
+
+    <div class="flex justify-center m-4">
+      <select v-model="date" class="p-2 rounded border" @change="fetchData(date)">
+        <option v-for="({ date }, i) in dates" :key="i" :value="date">
+          {{ toDisplayDate(date) }}
+        </option>
+      </select>
+    </div>
+
+    <div class="flex w-full">
+      <div :class="getTabClasses('budget')" class="border-b-2 border-orange-400 text-orange-400 px-4 py-2 flex-auto text-center cursor-pointer" @click="tab = 'budget'">Budget</div>
+      <div :class="getTabClasses('spending')" class="text-bold text-orange-300 px-4 py-2 flex-auto text-center cursor-pointer" @click="tab = 'spending'">Spending</div>
+    </div>
+
+    <section v-if="tab === 'budget'" class="mt-4">
       <div class="px-4">
         <div class="flex">
           <h2 class="text-3xl flex-auto">Budget</h2>
-          <div class="flex flex-col items-center">
-            <div>
-              <select v-model="date" class="p-2 rounded border" @change="fetchData(date)">
-                <option v-for="({ date }, i) in dates" :key="i" :value="date">
-                  {{ toDisplayDate(date) }}
-                </option>
-              </select>
-            </div>
-          </div>
         </div>
         <div class="grid gap-8">
           <div class="grid gap-2 mt-2">
@@ -65,7 +70,8 @@
         </div>
       </div>
     </section>
-    <section class="mt-8">
+
+    <section v-else-if="tab === 'spending'" class="mt-8">
       <div class="px-4">
         <div class="flex items-center">
           <h2 class="text-3xl">Expenses</h2>
@@ -91,8 +97,8 @@
           </table>
         </div>
       </div>
-      </section>
-      <section class="mt-8">
+
+      <div class="mt-8">
         <div class="px-4">
           <div class="flex items-center">
             <h2 class="text-3xl">Investments</h2>
@@ -114,6 +120,7 @@
             </tbody>
           </table>
         </div>
+      </div>
     </section>
 
 
@@ -155,6 +162,7 @@
           showUnknownExpenses: false,
         },
         invests: {},
+        tab: 'budget',
       }
     },
     watch: {
@@ -182,6 +190,15 @@
         this.fixedExpenses = await get(`/getFixedExpenses?date=${date}`);
         this.invests = await get(`/getInvests?date=${date}`);
         this.flags.loading = false;
+      },
+      getTabClasses(tab) {
+        return {
+          'border-b-2': tab === this.tab,
+          'border-b-0': tab !== this.tab,
+          'border-orange-400': tab === this.tab,
+          'text-orange-400': tab === this.tab,
+          'text-orange-200': tab !== this.tab,
+        }
       },
       onUnknownExpensesDone() {
         this.flags.showUnknownExpenses = false;
