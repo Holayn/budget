@@ -43,6 +43,7 @@
               label="Available"
               :misc="`budget ($${budget.invest}) + balance ($${balance.amount}) - over-spend ($${calculations.overSpendAmount})`"
             />
+            <LabeledData :data="invests.total" label="Spent" :misc="`${invests.total > budget.invest ? `$${budget.invest} investment goal met!` : `$${budget.invest - invests.total} still needed to invest`}`"/>
             <LabeledData :data="calculations.totalInvestLeft" label="Remaining"/>
           </div>
           <div class="grid gap-2 mt-2">

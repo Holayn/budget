@@ -61,16 +61,18 @@ router.get('/getBalance', (req, res) => {
   const balance = getBalance(req.query.date);
   res.send(balance);
 });
-router.get('/getCurrentBalance', (req, res) => {
+router.get('/status', (req, res) => {
   const balance = getBalance();
+  const budget = getBudget();
   const expenses = getExpenses();
   const invests = getInvests();
-  const currentBalance = {
+  const status = {
     amount: balance.amount - expenses.total - invests.total,
-    spend_surplus: balance.spend_surplus - expenses.total,
-    invest_surplus: balance.invest_surplus - invests.total,
+    // rename to status
+    spendStatus: balance.spend_surplus + (Math.min(budget.spend - expenses.total, 0)),
+    investStatus: balance.invest_surplus + (Math.min(budget.invest - invests.total, 0)),
   }
-  res.send(currentBalance);
+  res.send(status);
 });
 
 router.get('/getDates', (req, res) => {
