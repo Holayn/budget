@@ -2,13 +2,18 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const moment = require('moment');
 const path = require('path');
-const prompt = require('prompt');
+const CronJob = require('cron').CronJob;
 
 const { findExistingExpenseEntry, findExpenseWithDescription } = require('./expense.js');
 const { addExpense } = require('./expenser.js');
 
 const MAPPINGS = '../configs/mappings.json';
 const CSV_DIRECTORY = '../csv';
+
+// Parse any available spreadsheets every 15 minutes
+new CronJob('15 * * * *', () => {
+  parse();
+}).start();
 
 async function parse() {
   const filesToParse = findFiles();

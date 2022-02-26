@@ -33,6 +33,7 @@ available types:
 
 ### TODO
 - factor in income
+- pretty charts
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements
