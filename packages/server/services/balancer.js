@@ -15,7 +15,7 @@ function updateBalance(date) {
   const prevExpenses = getExpenses(prevMonthDate);
   const prevInvests = getInvests(prevMonthDate);
   const prevBalance = getBalance(prevMonthDate);
-  const budget = getBudget(date);
+  const budget = getBudget(prevMonthDate);
   updateMonthBalance(date, budget, prevBalance, prevExpenses, prevInvests);
 }
 

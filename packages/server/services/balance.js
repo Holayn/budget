@@ -3,14 +3,14 @@ const moment = require('moment');
 const { DB_DATE_FORMAT } = require('../globals');
 const db = require('./db.js').getDb();
 
-function calculateMonthBalance(budget, prevBalance, prevExpenses, prevInvests) {
-  const spendSurplus = budget.spend - prevExpenses.total + (prevBalance.spend_surplus ?? 0);
-  const investSurplus = budget.invest - prevInvests.total + (prevBalance.invest_surplus ?? 0);
+function calculateMonthBalance(prevBudget, prevBalance, prevExpenses, prevInvests) {
+  const spendSurplus = prevBudget.spend - prevExpenses.total + (prevBalance.spend_surplus ?? 0);
+  const investSurplus = prevBudget.invest - prevInvests.total + (prevBalance.invest_surplus ?? 0);
 
   // TODO: factor in income from previous month, as well as previous month's amount
   // const amount = spendSurplus + investSurplus + prevBalance.amount;
   const income = 0;
-  const amount = prevBalance.amount + (budget.spend - prevExpenses.total) + (budget.invest - prevInvests.total) + income;
+  const amount = prevBalance.amount + (prevBudget.spend - prevExpenses.total) + (prevBudget.invest - prevInvests.total) + income;
 
   return {
     investSurplus,

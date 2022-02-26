@@ -32,7 +32,7 @@ available types:
 'Invest',
 
 ### TODO
-- remove server prompt, instead build into ui
+- factor in income
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements
