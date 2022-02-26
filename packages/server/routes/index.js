@@ -67,7 +67,7 @@ router.get('/status', (req, res) => {
   const expenses = getExpenses();
   const invests = getInvests();
   const status = {
-    amount: balance.amount - expenses.total - invests.total,
+    amount: balance.amount + budget.total - expenses.total - invests.total - budget.fixed,
     // rename to status
     spendStatus: balance.spend_surplus + (Math.min(budget.spend - expenses.total, 0)),
     investStatus: balance.invest_surplus + (Math.min(budget.invest - invests.total, 0)),
