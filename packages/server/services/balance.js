@@ -3,23 +3,7 @@ const moment = require('moment');
 const { DB_DATE_FORMAT } = require('../globals');
 const db = require('./db.js').getDb();
 
-function calculateMonthBalance(prevBudget, prevBalance, prevExpenses, prevInvests) {
-  const spendSurplus = prevBudget.spend - prevExpenses.total + (prevBalance.spend_surplus ?? 0);
-  const investSurplus = prevBudget.invest - prevInvests.total + (prevBalance.invest_surplus ?? 0);
-
-  // TODO: factor in income from previous month, as well as previous month's amount
-  // const amount = spendSurplus + investSurplus + prevBalance.amount;
-  const income = 0;
-  const amount = prevBalance.amount + (prevBudget.spend - prevExpenses.total) + (prevBudget.invest - prevInvests.total) + income;
-
-  return {
-    investSurplus,
-    spendSurplus,
-    amount,
-  }
-}
-
-function updateMonthBalance(date, budget, prevBalance, prevExpenses, prevInvests) {
+function updateBalance(date, { amount, spendSurplus, amountSurplus }) {
   const stmt = db.prepare(`SELECT * FROM balance WHERE date = @date`);
   const currentBalance = stmt.get({
     date: moment(date).startOf('month').format(DB_DATE_FORMAT),
@@ -32,7 +16,9 @@ function updateMonthBalance(date, budget, prevBalance, prevExpenses, prevInvests
 
     insert({
       date: moment(date).startOf('month').format(DB_DATE_FORMAT),
-      ...calculateMonthBalance(budget, prevBalance, prevExpenses, prevInvests)
+      amount,
+      spendSurplus,
+      amountSurplus,
     });
   } else {
     const update = db.transaction(balance => {
@@ -42,7 +28,9 @@ function updateMonthBalance(date, budget, prevBalance, prevExpenses, prevInvests
 
     update({
       date: moment(date).startOf('month').format(DB_DATE_FORMAT),
-      ...calculateMonthBalance(budget, prevBalance, prevExpenses, prevInvests)
+      amount,
+      spendSurplus,
+      amountSurplus,
     });
   }
 }
@@ -62,5 +50,5 @@ function getAllBalanceDates() {
 module.exports = {
   getAllBalanceDates,
   getBalance,
-  updateMonthBalance,
+  updateBalance,
 }
