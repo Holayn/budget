@@ -127,7 +127,7 @@
 
 
 
-    <AddExpense v-if="flags.showAddExpense" :date="date" @close="flags.showAddExpense = false" @done="fetchData(this.date)"/>
+    <AddExpense v-if="flags.showAddExpense" :date="date" @close="flags.showAddExpense = false" @done="fetchData(this.date); flags.showAddExpense = false;"/>
   </main>
 </template>
 
