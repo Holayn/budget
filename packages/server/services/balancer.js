@@ -5,8 +5,8 @@ const { updateBalance: _updateBalance, getBalance } = require('./balance.js');
 const { getBudget } = require('./budget.js');
 const { getExpenses, getInvests } = require('./expense.js');
 
-// Auto insert new balance every month
-new CronJob('0 0 1 * *', () => {
+// Auto-update balance every day. This has the added benefit of adding a new balance every month.
+new CronJob('0 0 * * *', () => {
   updateBalance(moment());
 }).start();
 
