@@ -81,6 +81,17 @@ function parseFile({ path: filePath, source }) {
           const date = moment(row[mapping.date], 'MM/DD/YYYY');
           const description = row[mapping.description];
 
+          let skip = false;
+          mapping.skip?.forEach(s => {
+            if (s.includes(description)) {
+              skip = true;
+            }
+          });
+
+          if (skip) {
+            continue;
+          }
+
           if (findExistingExpenseEntry({ amount, date, description })) {
             console.log(`EXISTING ENTRY FOUND: ${description} (${amount}) on ${date}`);
             continue;
