@@ -3,7 +3,7 @@ const moment = require('moment');
 const { DB_DATE_FORMAT } = require('../globals');
 const db = require('./db.js').getDb();
 
-function updateBalance(date, { amount, spendSurplus, amountSurplus }) {
+function updateBalance(date, { amount, spendSurplus, investSurplus }) {
   const stmt = db.prepare(`SELECT * FROM balance WHERE date = @date`);
   const currentBalance = stmt.get({
     date: moment(date).startOf('month').format(DB_DATE_FORMAT),
