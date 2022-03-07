@@ -18,7 +18,7 @@ function updateBalance(date, { amount, spendSurplus, investSurplus }) {
       date: moment(date).startOf('month').format(DB_DATE_FORMAT),
       amount,
       spendSurplus,
-      amountSurplus,
+      investSurplus,
     });
   } else {
     const update = db.transaction(balance => {
@@ -30,7 +30,7 @@ function updateBalance(date, { amount, spendSurplus, investSurplus }) {
       date: moment(date).startOf('month').format(DB_DATE_FORMAT),
       amount,
       spendSurplus,
-      amountSurplus,
+      investSurplus,
     });
   }
 }
