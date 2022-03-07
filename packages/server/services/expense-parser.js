@@ -85,6 +85,8 @@ function parseFile({ path: filePath, source }) {
           mapping.skip?.forEach(s => {
             if (s.includes(description)) {
               skip = true;
+            } else if (description.includes(s)) {
+              skip = true;
             }
           });
 
