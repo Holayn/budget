@@ -1,22 +1,26 @@
 <template>
   <div class="fixed top-0 left-0 h-full w-full bg-gray-200/90">
-    <div class="mt-2 overflow-auto">
-      <table>
+    <div class="mt-2 overflow-auto h-full">
+      <table class="table-fixed">
         <thead class="bg-orange-200 text-left">
-          <th>Date</th>
-          <th>Type</th>
+          <th style="width: 112px;">Date</th>
+          <th style="width: 112px;">Type</th>
           <th>Description</th>
-          <th>Amount</th>
+          <th style="width: 112px;">Amount</th>
         </thead>
         <tbody class="bg-orange-50">
           <tr v-for="(expense, i) in newExpenses" :key="i">
             <td class="pr-4 whitespace-nowrap">{{ expense.date }}</td>
             <td class="pr-4">
-              <select v-model="expense.type">
+              <select v-model="expense.type" style="width: 112px;">
                 <option v-for="(type, i) in types" :key="i" :value="type">{{ type }}</option>
               </select>
             </td>
-            <td class="pr-4">{{ expense.description }}</td>
+            <td class="pr-4">
+              <div style="width: 100%; overflow: auto; white-space: pre; text-overflow: ellipsis;">
+                {{ expense.description }}
+              </div>
+            </td>
             <td>{{ expense.amount }}</td>
           </tr>
         </tbody>
