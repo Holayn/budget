@@ -68,8 +68,6 @@ router.get('/status', (req, res) => {
   const invests = getInvests();
   const status = {
     amount: balance.amount + budget.total - expenses.total - invests.total - budget.fixed,
-    // amount haven't spent + this month's spending allocation - total spent this month
-    spendStatus: balance.spend_surplus + budget.spend - expenses.total,
     // amount still need to invest + this month's invest allocation - total invested this month
     investStatus: balance.invest_surplus + budget.invest - invests.total,
   }

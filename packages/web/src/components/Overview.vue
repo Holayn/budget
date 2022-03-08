@@ -20,18 +20,6 @@
         </div>
       </div>
     </div>
-
-    <div class="mt-4">
-      <div>Spending Status:</div>
-      <div class="text-xl">
-        <div v-if="status.spendStatus >= 0" class="text-green-500">
-          Underspent by ${{ status.spendStatus.toFixed(2) }}
-        </div>
-        <div v-else-if="status.spendStatus < 0" class="text-red-500">
-          Overspent by ${{ status.spendStatus.toFixed(2) * -1 }}
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
