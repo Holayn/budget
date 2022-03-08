@@ -34,6 +34,9 @@ available types:
 ### TODO
 - factor in income
 - pretty charts
+- projected expenses
+- ability to add details to spending
+- spending surplus should be affected by overinvestment. that's "spending"
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements
