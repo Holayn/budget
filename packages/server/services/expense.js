@@ -51,7 +51,7 @@ function findExistingExpenseEntry({ amount, date, description }) {
 }
 
 function getExpenses(date) {
-  const stmt = db.prepare(`SELECT * FROM expense WHERE date >= @firstDay AND date < @lastDay AND type != 'Invest'`);
+  const stmt = db.prepare(`SELECT * FROM expense WHERE date >= @firstDay AND date < @lastDay AND type != 'Invest' ORDER BY date desc`);
   const expenses = stmt.all({
     firstDay: moment(date).startOf('month').format(DB_DATE_FORMAT),
     lastDay: moment(date).endOf('month').format(DB_DATE_FORMAT),
@@ -74,7 +74,7 @@ function getFixedExpenses(date) {
 }
 
 function getInvests(date) {
-  const stmt = db.prepare(`SELECT * FROM expense WHERE date >= @firstDay AND date < @lastDay AND type = 'Invest'`);
+  const stmt = db.prepare(`SELECT * FROM expense WHERE date >= @firstDay AND date < @lastDay AND type = 'Invest' ORDER BY date desc`);
   const invests = stmt.all({
     firstDay: moment(date).startOf('month').format(DB_DATE_FORMAT),
     lastDay: moment(date).endOf('month').format(DB_DATE_FORMAT),
