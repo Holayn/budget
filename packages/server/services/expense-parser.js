@@ -62,7 +62,6 @@ function parseFile({ path: filePath, source }) {
       .on('data', data => rows.push(data))
       .on('end', async () => {
         console.info(`---Parsed ${filePath}---`);
-        debugger;
         // TODO: handle expenses that have the same date, amount, and description, but are not duplicates.
 
         // Insert records into DB
@@ -79,6 +78,10 @@ function parseFile({ path: filePath, source }) {
           const rawAmount = Array.isArray(mapping.amount) ? row[mapping.amount[0]] + row[mapping.amount[1]] : row[mapping.amount];
           const amount = parseFloat(rawAmount.replace(/,|\$/g, ''));
           const date = moment(row[mapping.date], 'MM/DD/YYYY');
+          if (!date.isValid()) {
+            console.error('INVALID DATE ON ENTRY');
+            return;
+          }
           const description = row[mapping.description];
 
           let skip = false;
