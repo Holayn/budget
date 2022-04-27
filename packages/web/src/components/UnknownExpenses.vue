@@ -63,6 +63,7 @@
     },
     async mounted() {
       this.types = await get('/expenseTypes');
+      this.types.sort();
     },
     methods: {
       async submit() {
