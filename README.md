@@ -1,3 +1,18 @@
+# Development
+
+## Web
+```
+  cd packages/web
+  yarn dev
+```
+
+## Server
+- Ensure .env variables are populated. See sample.env.
+```
+  cd packages/server
+  yarn start
+```
+
 - import expenses via csv
   - csv/manual format: text file containing copy paste from an excel sheet (columns tab delineated)
 - see expenses for a month
@@ -10,6 +25,7 @@
 balance (beginning of month values)
 - amount: the total amount of money available
 - spend_surplus: total amount of unspent spend budget
+  - currently unused
 - invest_surplus: total amount of unspent investment budget
 
 budget (given a certain month)
@@ -37,6 +53,8 @@ available types:
 - projected expenses
 - ability to add details to spending
 - spending surplus should be affected by overinvestment. that's "spending"
+- replace moment with day.js
+- show unknown expenses regardless of month being viewed
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements

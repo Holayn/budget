@@ -1,16 +1,17 @@
 {
   "citi": {
-    "description": "Description",
-    "amount": ["Debit", "Credit"],
-    "date": "Date"
+    "description": "Name of the description column",
+    "amount": ["Name of an amount column", "Name of an amount column"],
+    "date": "Name of the date column"
   },
   "amex": {
-    "description": "Description",
-    "date": "Date",
-    "amount": "Amount"
+    "description": "Name of the description column",
+    "date": "Name of the date column",
+    "amount": "Name of the amount column",
+    "skip": ["Entry to skip that contains this text in its description"]
   },
   "manual": {
-    "description": 0,
+    "description": 0, // index of description column
     "amount": 2,
     "date": 4
   }
