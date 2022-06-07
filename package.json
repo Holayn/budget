@@ -3,5 +3,10 @@
   "scripts": {
     "deploy": "cd packages/web && yarn build && cd ../server && yarn start"
   },
-  "workspaces": ["packages/web", "packages/server"]
+  "workspaces": [
+    "packages/web",
+    "packages/server"
+  ],
+  "version": "0.0.0",
+  "packageManager": "yarn@3.2.1"
 }
