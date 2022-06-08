@@ -25,16 +25,13 @@ function updateBalance(date) {
 
 function calculateMonthBalance(prevBudget, prevBalance, prevExpenses, prevInvests) {
   const investSurplus = prevBalance.invest_surplus + (prevBudget.invest - prevInvests.total);
-  const spendSurplus = prevBalance.spend_surplus + (prevBudget.spend - prevExpenses.total);
 
   // TODO: factor in income from previous month, as well as previous month's amount
-  // const amount = spendSurplus + investSurplus + prevBalance.amount;
   const income = 0;
   const amount = prevBalance.amount + prevBudget.total - prevExpenses.total - prevInvests.total - prevBudget.fixed + income;
 
   return {
     investSurplus,
-    spendSurplus,
     amount,
   }
 }
