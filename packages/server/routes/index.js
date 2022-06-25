@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const { EXPENSE_TYPES } = require('../globals');
 const { getAllBalanceDates, getBalance } = require('../services/balance.js');
 const { updateBalance } = require('../services/balancer.js');
-const { addExpense, updateExpense } = require('../services/expenser.js');
+const { addExpense, fixExpense, updateExpense } = require('../services/expenser.js');
 const { getBudget } = require('../services/budget.js');
 const { getExpenses, getFixedExpenses, getInvests } = require('../services/expense.js');
 const { parse } = require('../services/expense-parser.js');
@@ -101,6 +101,15 @@ router.post('/updateExpense', (req, res) => {
     description,
     id,
     type,
+  });
+  res.send({});
+});
+
+router.post('/fixExpense', (req, res) => {
+  const { id, amount } = req.body;
+  fixExpense({
+    id,
+    amount,
   });
   res.send({});
 });

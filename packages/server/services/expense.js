@@ -3,6 +3,8 @@ const moment = require('moment');
 const { DB_DATE_FORMAT } = require('../globals');
 const db = require('./db.js').getDb();
 
+const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
 function insertExpense({ amount, date, description, details, type }) {
   const insert = db.transaction(expense => {
     const stmt = db.prepare('INSERT INTO expense (type, amount, description, details, date) VALUES (@type, @amount, @description, @details, @date)');
@@ -18,9 +20,16 @@ function insertExpense({ amount, date, description, details, type }) {
   });
 }
 
-function updateExpense({ amount, date, description, details, id, type }) {
+function updateExpense(properties) {
+  const { amount, date, description, details, id, isFixed, originalAmount, type } = properties;
+  
   const update = db.transaction(expense => {
-    const stmt = db.prepare('UPDATE expense SET amount = @amount, date = @date, description = @description, details = @details, type = @type WHERE id = @id');
+    const setStatements = [];
+    Object.keys(properties).forEach(property => {
+      if (property === 'id') { return; }
+      setStatements.push(`${camelToSnakeCase(property)} = @${property}`);
+    });
+    const stmt = db.prepare(`UPDATE expense SET ${setStatements.join(', ')} WHERE id = @id`);
     stmt.run(expense);
   });
 
@@ -30,7 +39,16 @@ function updateExpense({ amount, date, description, details, id, type }) {
     description,
     details,
     id,
+    isFixed: isFixed ? 1 : 0,
+    originalAmount,
     type,
+  });
+}
+
+function read(id) {
+  const stmt = db.prepare(`SELECT * FROM expense WHERE id = @id`);
+  return stmt.get({
+    id,
   });
 }
 
@@ -96,5 +114,6 @@ module.exports = {
   getFixedExpenses,
   getInvests,
   insertExpense,
+  read,
   updateExpense,
 }

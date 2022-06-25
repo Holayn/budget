@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const { DB_DATE_FORMAT } = '../globals';
-const { insertExpense, updateExpense: _updateExpense } = require('./expense.js');
+const { insertExpense, read, updateExpense: _updateExpense } = require('./expense.js');
 const { updateBalance } = require('./balancer.js');
 
 function addExpense({ amount, date, description, type }) {
@@ -20,6 +20,20 @@ function addExpense({ amount, date, description, type }) {
     currDate = moment(currDate).add(1, 'months');
     updateBalance(currDate);
   }
+}
+
+function fixExpense({ id, amount }) {
+  const expense = read(id);
+  const update = {
+    amount,
+    id,
+    isFixed: true,
+  }
+
+  if (!expense.is_fixed) {
+    update.originalAmount = expense.amount;
+  }
+  _updateExpense(update);
 }
 
 function updateExpense({ amount, date, description, id, type }) {
@@ -43,5 +57,6 @@ function updateExpense({ amount, date, description, id, type }) {
 
 module.exports = {
   addExpense,
+  fixExpense,
   updateExpense,
 }
