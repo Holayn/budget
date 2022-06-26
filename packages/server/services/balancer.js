@@ -23,7 +23,10 @@ function updateBalance(date) {
 
   const currentBalance = BalanceDB.getByStartOfMonth(date);
   if (currentBalance) {
-    BalanceDB.update(newBalance);
+    BalanceDB.update({
+      ...newBalance,
+      id: currentBalance.id,
+    });
   }
   else {
     BalanceDB.create(newBalance);
