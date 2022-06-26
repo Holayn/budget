@@ -1,6 +1,5 @@
 node_modules
 log
-db
 configs/mappings.json
 csv
 .env

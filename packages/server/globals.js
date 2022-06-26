@@ -1,5 +1,3 @@
-const DB_DATE_FORMAT = 'yyyy-MM-DD';
-
 const EXPENSE_TYPES = [
   'Groceries',
   'Household Goods',
@@ -16,6 +14,5 @@ const EXPENSE_TYPES = [
 ];
 
 module.exports = {
-  DB_DATE_FORMAT,
   EXPENSE_TYPES,
 }

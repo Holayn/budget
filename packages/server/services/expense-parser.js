@@ -4,7 +4,7 @@ const moment = require('moment');
 const path = require('path');
 const CronJob = require('cron').CronJob;
 
-const { findExistingExpenseEntry, findExpenseWithDescription } = require('./expense.js');
+const { ExpenseDB } = require('./db/expense.js');
 const { addExpense } = require('./expenser.js');
 
 const MAPPINGS = '../configs/mappings.json';
@@ -97,13 +97,13 @@ function parseFile({ path: filePath, source }) {
             continue;
           }
 
-          if (findExistingExpenseEntry({ amount, date, description })) {
+          if (ExpenseDB.getByAmountDateDescription({ amount, date, description })) {
             console.log(`EXISTING ENTRY FOUND: ${description} (${amount}) on ${date}`);
             continue;
           }
 
           let type;
-          const existingExpenseForDescription = findExpenseWithDescription(description);
+          const existingExpenseForDescription = ExpenseDB.getByDescription(description);
           if (existingExpenseForDescription) {
             type = existingExpenseForDescription.type;
           } else {

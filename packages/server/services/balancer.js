@@ -1,9 +1,9 @@
 const moment = require('moment');
 const CronJob = require('cron').CronJob;
 
-const { updateBalance: _updateBalance, getBalance } = require('./balance.js');
-const { getBudget } = require('./budget.js');
-const { getExpenses, getInvests } = require('./expense.js');
+const { BalanceDB } = require('./db/balance.js');
+const { BudgetDB } = require('./db/budget.js');
+const { ExpenseDB } = require('./db/expense.js');
 
 // Auto-update balance every day. This has the added benefit of adding a new balance every month.
 new CronJob('0 0 * * *', () => {
@@ -12,15 +12,22 @@ new CronJob('0 0 * * *', () => {
 
 function updateBalance(date) {
   const prevMonthDate = moment(date).subtract(1, 'months');
-  const prevExpenses = getExpenses(prevMonthDate);
-  const prevInvests = getInvests(prevMonthDate);
-  const prevBalance = getBalance(prevMonthDate);
-  const budget = getBudget(prevMonthDate);
+  const prevExpenses = ExpenseDB.findExpenses(prevMonthDate);
+  const prevInvests = ExpenseDB.findInvests(prevMonthDate);
+  const prevBalance = BalanceDB.getByDate(prevMonthDate);
+  const budget = BudgetDB.getByDate(prevMonthDate);
   if (!prevBalance || !budget) {
     return;
   }
   const newBalance = calculateMonthBalance(budget, prevBalance, prevExpenses, prevInvests);
-  _updateBalance(date, newBalance);
+
+  const currentBalance = BalanceDB.getByStartOfMonth(date);
+  if (currentBalance) {
+    BalanceDB.update(newBalance);
+  }
+  else {
+    BalanceDB.create(newBalance);
+  }
 }
 
 function calculateMonthBalance(prevBudget, prevBalance, prevExpenses, prevInvests) {
@@ -36,6 +43,16 @@ function calculateMonthBalance(prevBudget, prevBalance, prevExpenses, prevInvest
   }
 }
 
+function updateBalanceStartingFrom(date) {
+  const today = moment();
+  let currDate = moment(date);
+  while (currDate.year() != today.year() || currDate.month() != today.month()) {
+    currDate = moment(currDate).add(1, 'months');
+    updateBalance(currDate);
+  }
+}
+
 module.exports = {
   updateBalance,
+  updateBalanceStartingFrom,
 }
