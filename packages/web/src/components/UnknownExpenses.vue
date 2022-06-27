@@ -1,6 +1,6 @@
 <template>
   <div class="fixed top-0 left-0 h-full w-full bg-gray-200/90">
-    <div class="mt-2 overflow-auto h-full">
+    <div class="flex flex-col items-center mt-2 overflow-auto h-full">
       <table class="table-fixed">
         <thead class="bg-orange-200 text-left">
           <th style="width: 112px;">Date</th>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-  import moment from 'moment';
   import { get, post } from '../fetch';
 
   export default {
