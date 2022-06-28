@@ -181,6 +181,7 @@
     async created() {
       await this.fetchData(this.date);
       this.dates = await get('/getDates');
+      this.dates.sort((a, b) => a.date.localeCompare(b.date));
     },
     computed: {
       unknownExpenses() {
