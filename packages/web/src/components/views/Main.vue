@@ -85,7 +85,8 @@
               <th>Date</th>
               <th>Type</th>
               <th>Description</th>
-              <th>Amount</th>
+              <th class="pr-4">Amount</th>
+              <th></th>
             </thead>
             <tbody class="bg-orange-50">
               <tr v-for="(expense, i) in expenses.expenses" :key="i">
@@ -93,6 +94,7 @@
                 <td class="pr-4">{{ expense.type }}</td>
                 <td class="pr-4">{{ expense.description }}</td>
                 <td>{{ expense.amount }}</td>
+                <td><button class="bg-orange-400 rounded px-2" @click="fixExpense = expense; flags.showFixExpense = true">Fix</button></td>
               </tr>
             </tbody>
           </table>
@@ -128,22 +130,25 @@
 
 
     <AddExpense v-if="flags.showAddExpense" :date="date" @close="flags.showAddExpense = false" @done="fetchData(this.date); flags.showAddExpense = false;"/>
+    <FixExpense v-if="flags.showFixExpense" :expense="fixExpense" @close="flags.showFixExpense = false"></FixExpense>
   </main>
 </template>
 
 <script>
   import moment from 'moment';
   import AddExpense from '../AddExpense.vue';
+  import FixExpense from '../FixExpense.vue';
   import LabeledData from '../LabeledData.vue';
   import Overview from '../Overview.vue';
   import UnknownExpenses from '../UnknownExpenses.vue';
-  import { get, post } from '../../fetch';
+  import { get } from '../../fetch';
   import { EXPENSE_UNKNOWN } from '../../globals';
 
   export default {
     name: 'Main',
     components: {
       AddExpense,
+      FixExpense,
       LabeledData,
       Overview,
       UnknownExpenses,
@@ -156,10 +161,12 @@
         date: moment().startOf('month').format('yyyy-MM-DD'),
         dates: [],
         expenses: {},
+        fixExpense: null,
         fixedExpenses: {},
         flags: {
           loading: false,
           showAddExpense: false,
+          showFixExpense: false,
           showUnknownExpenses: false,
         },
         invests: {},

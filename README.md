@@ -51,12 +51,12 @@ available types:
 - pretty charts
 - projected expenses
 - ability to add details to spending
-- spending surplus should be affected by overinvestment. that's "spending"
 - replace moment with day.js
 - show unknown expenses regardless of month being viewed
 - remove "get" from route names
 - allow for adjusting "amount"
 - proper db transactions
+- update expenses in one call
 
 ### EVENTUAL TODO
 - auto api calls to credit card statements
