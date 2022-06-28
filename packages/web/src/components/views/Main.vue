@@ -130,7 +130,7 @@
 
 
     <AddExpense v-if="flags.showAddExpense" :date="date" @close="flags.showAddExpense = false" @done="fetchData(this.date); flags.showAddExpense = false;"/>
-    <FixExpense v-if="flags.showFixExpense" :expense="fixExpense" @close="flags.showFixExpense = false"></FixExpense>
+    <FixExpense v-if="flags.showFixExpense" :expense="fixExpense" @close="flags.showFixExpense = false" @amount="fixExpense.amount = $event"></FixExpense>
   </main>
 </template>
 

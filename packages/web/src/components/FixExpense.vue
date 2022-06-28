@@ -57,7 +57,8 @@
             }),
         });
 
-        this.$emit('done');
+        this.$emit('amount', this.newAmount);
+        this.$emit('close');
         this.loading = false;
       }
     },
