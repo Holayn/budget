@@ -174,14 +174,27 @@
       }
     },
     watch: {
+      date() {
+        const url = new URL(window.location);
+        url.searchParams.set('date', this.date);
+        window.history.pushState(null, '', url.toString());
+      },
       unknownExpenses() {
         this.flags.showUnknownExpenses = !!this.unknownExpenses.length;
       }
     },
     async created() {
-      await this.fetchData(this.date);
       this.dates = await get('/getDates');
       this.dates.sort((a, b) => a.date.localeCompare(b.date));
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const date = urlParams.get('date');
+
+      if (date) {
+        this.date = date;
+      }
+
+      await this.fetchData(this.date);
     },
     computed: {
       unknownExpenses() {
