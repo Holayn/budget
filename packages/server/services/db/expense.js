@@ -18,7 +18,7 @@ class ExpenseDB extends DB {
   }
 
   static getByAmountDateDescription({ amount, date, description }) {
-    const stmt = db.prepare('SELECT * FROM expense WHERE date = @date AND amount = @amount AND description = @description');
+    const stmt = db.prepare('SELECT * FROM expense WHERE date = @date AND (amount = @amount OR (is_fixed = 1 AND original_amount = @amount)) AND description = @description');
     return stmt.get({
       amount,
       date: moment(date).format(DB_DATE_FORMAT),
