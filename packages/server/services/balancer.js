@@ -29,7 +29,10 @@ function updateBalance(date) {
     });
   }
   else {
-    BalanceDB.create(newBalance);
+    BalanceDB.insert({
+      ...newBalance,
+      date,
+    });
   }
 }
 

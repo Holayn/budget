@@ -78,7 +78,7 @@ class DB {
         }
       });
 
-      const stmt = db.prepare(`INSERT INTO ${this.tableName} (${Object.keys(propertiesToInsert).join(', ')}) VALUES (${Object.keys(propertiesToInsert).map(p => `@${p}`).join(', ')})`);
+      const stmt = db.prepare(`INSERT INTO ${this.tableName} (${Object.keys(propertiesToInsert).map(p => camelToSnakeCase(p)).join(', ')}) VALUES (${Object.keys(propertiesToInsert).map(p => `@${p}`).join(', ')})`);
       stmt.run(propertiesToInsert);
     })(properties);
   }

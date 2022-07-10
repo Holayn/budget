@@ -27,6 +27,13 @@ class BalanceDB extends DB {
     const stmt = db.prepare(`SELECT date FROM balance`);
     return stmt.all();
   }
+
+  static insert(properties) {
+    super.insert({
+      ...properties,
+      date: moment(properties.date).startOf('month').format(DB_DATE_FORMAT),
+    });
+  }
 }
 
 module.exports = {
