@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const logger = require('./services/logger');
 
@@ -10,8 +11,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Don't reveal this information...
-app.disable('x-powered-by');
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
